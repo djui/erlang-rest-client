@@ -79,9 +79,5 @@ kf(Key, List) ->
 b(B) when is_binary(B) -> unicode:characters_to_list(B);
 b(S) when is_list(S)   -> unicode:characters_to_binary(S).
 
-%% Can't use code:priv_dir/1 as the application is usually not loaded.
-priv_file(Filename) ->
-  filename:join([ filename:dirname(code:which(?MODULE)), "../priv", Filename]).
-
 %%% Mode: Erlang
 %%% End.
