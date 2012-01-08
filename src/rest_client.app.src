@@ -1,0 +1,11 @@
+{application, rest_client
+ [
+  {description, "Erlang REST Client"},
+  {vsn, "1"},
+  {registered, []},
+  {applications, [
+                  kernel,
+                  stdlib
+                 ]},
+  {env, []}
+ ]}.
