@@ -1,4 +1,4 @@
-{application, rest_client
+{application, rest_client,
  [
   {description, "Erlang REST Client"},
   {vsn, "1"},
