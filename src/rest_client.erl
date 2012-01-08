@@ -52,8 +52,8 @@ send_request(Method, {Url, []}) ->
 parse_response({ok, {{"HTTP/1.1", 200, "OK"}, Headers, Body}}) ->
   case kf("content-type", Headers) of
     "application/xml" ->
-      {ok, Payload} = erlsom:simple_form(Xml),
-      {ok, PAyload};
+      {ok, Payload} = erlsom:simple_form(Body),
+      {ok, Payload};
     "application/json" ->
       Payload = mochijson2:decode(Body, [{format, proplist}]),
       {ok, Payload};
