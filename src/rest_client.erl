@@ -48,8 +48,8 @@ request(Method, Path, Data) ->
   parse_response(Response).
 
 %%%_* Internals --------------------------------------------------------
-send_request(Method, {Url, []}) ->
-  httpc:request(Method, {Url, []}, [{timeout, ?SERVER_TIMEOUT}], []).
+send_request(Method, Request) ->
+  httpc:request(Method, Request, [{timeout, ?SERVER_TIMEOUT}], []).
  
 parse_response({ok, {{"HTTP/1.1", 200, "OK"}, Headers, Body}}) ->
   case kf("content-type", Headers) of
