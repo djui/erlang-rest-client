@@ -73,6 +73,10 @@ parse_response({ok, {{"HTTP/1.1", 404, "Not Found"}, Headers, Body}}) ->
     _ ->
       error("invalid method")
   end;
+parse_response({ok, {{"HTTP/1.1", ErrCode, ErrText}, _Headers, _Body}}) ->
+  error(ErrCode ++ " " ++ ErrText);
+parse_response({ok, {{HTTP, _ErrCode, _ErrText}, _Headers, _Body}}) ->
+  error("Invalid HTTP version: " ++ HTTP);
 parse_response({error, _Reason}=Error) -> error(Error).
 
 error({error, Error}) -> erlang:throw(Error);
