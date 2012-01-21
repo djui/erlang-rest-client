@@ -1,5 +1,7 @@
 -module(rest_client).
 
+-compile({no_auto_import, [ error/1 ]}).
+
 %%%_* Exports ==========================================================
 -export([ request/1
         , request/2
@@ -58,18 +60,21 @@ parse_response({ok, {{"HTTP/1.1", 200, "OK"}, Headers, Body}}) ->
       Payload = mochijson2:decode(Body, [{format, proplist}]),
       {ok, Payload};
     _ ->
-      parse_response({error, unsupported_content_type})
+      error("unsupported content-type")
   end;
 parse_response({ok, {{"HTTP/1.1", 404, "Not Found"}, Headers, Body}}) ->
   case kf("content-type", Headers) of
     "application/json" ->
       Payload = mochijson2:decode(Body, [{format, proplist}]),
       Message = kf(b("message"), Payload),
-      {error, Message};
+      error(Message);
     _ ->
-      parse_response({error, invalid_method})
+      error("invalid method")
   end;
-parse_response({error, _Reason}=Error) -> Error.
+parse_response({error, _Reason}=Error) -> error(Error).
+
+error({error, Error}) -> erlang:throw(Error);
+error(Error)          -> error({error, Error}).
 
 %%%_* Helpers ----------------------------------------------------------
 kf(Key, List) ->
