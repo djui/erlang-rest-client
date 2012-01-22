@@ -66,7 +66,7 @@ parse_response({ok, {{"HTTP/1.1", 200, "OK"}, Headers, Body}}) ->
     _ ->
       error("unsupported content-type")
   end;
-parse_response({ok, {{"HTTP/1.1", 204, "Not Content"}, _Headers, _Body}}) ->
+parse_response({ok, {{"HTTP/1.1", 204, "No Content"}, _Headers, _Body}}) ->
   ok;
 parse_response({ok, {{"HTTP/1.1", 404, "Not Found"}, Headers, Body}}) ->
   case kf("content-type", Headers) of
