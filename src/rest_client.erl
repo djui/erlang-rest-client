@@ -81,10 +81,10 @@ parse_response({ok, {{"HTTP/1.1", 404, "Not Found"}, Headers, Body}}) ->
   case kf("content-type", Headers) of
     "application/json" ->
       Payload = mochijson2:decode(Body, [{format, proplist}]),
-      Message = kf(b("message"), Payload, "No error message provided"),
+      Message = kf(b("message"), Payload, "Resource not found"),
       error(Message);
     _ ->
-      error("Unknown REST call")
+      error("Resource not found")
   end;
 parse_response({ok, {{"HTTP/1.1", ErrCode, ErrText}, _Headers, _Body}}) ->
   error(fmt("Unknown response method: ~p ~s", [ErrCode, ErrText]));
