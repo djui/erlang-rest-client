@@ -64,7 +64,7 @@ parse_response({ok, {{"HTTP/1.1", 200, "OK"}, Headers, Body}}) ->
       Payload = mochijson2:decode(Body, [{format, proplist}]),
       {ok, Payload};
     _ ->
-      error("unsupported content-type")
+      error("Unsupported content-type")
   end;
 parse_response({ok, {{"HTTP/1.1", 204, "No Content"}, _Headers, _Body}}) ->
   ok;
@@ -75,7 +75,7 @@ parse_response({ok, {{"HTTP/1.1", 404, "Not Found"}, Headers, Body}}) ->
       Message = kf(b("message"), Payload),
       error(Message);
     _ ->
-      error("invalid method")
+      error("Unknown REST call")
   end;
 parse_response({ok, {{"HTTP/1.1", ErrCode, ErrText}, _Headers, _Body}}) ->
   error(fmt("Unknown response method: ~p ~s", [ErrCode, ErrText]));
