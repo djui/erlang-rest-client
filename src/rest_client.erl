@@ -78,7 +78,7 @@ parse_response({ok, {{"HTTP/1.1", 404, "Not Found"}, Headers, Body}}) ->
       error("invalid method")
   end;
 parse_response({ok, {{"HTTP/1.1", ErrCode, ErrText}, _Headers, _Body}}) ->
-  error(ErrCode ++ " " ++ ErrText);
+  error(fmt("Unknown response method: ~p ~s", [ErrCode, ErrText]));
 parse_response({ok, {{HTTP, _ErrCode, _ErrText}, _Headers, _Body}}) ->
   error("Invalid HTTP version: " ++ HTTP);
 parse_response({error, _Reason}=Error) -> error(Error).
@@ -93,6 +93,8 @@ kf(Key, List) ->
 
 b(B) when is_binary(B) -> unicode:characters_to_list(B);
 b(S) when is_list(S)   -> unicode:characters_to_binary(S).
+
+fmt(Format, Data) -> lists:flatten(io_lib:format(Format, Data)).
 
 %%% Mode: Erlang
 %%% End.
