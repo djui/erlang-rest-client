@@ -81,7 +81,7 @@ parse_response({ok, {{"HTTP/1.1", 404, "Not Found"}, Headers, Body}}) ->
   case kf("content-type", Headers) of
     "application/json" ->
       Payload = mochijson2:decode(Body, [{format, proplist}]),
-      Message = kf(b("message"), Payload),
+      Message = kf(b("message"), Payload, "No error message provided"),
       error(Message);
     _ ->
       error("Unknown REST call")
@@ -96,9 +96,13 @@ error({error, _}=Error) -> Error;
 error(Error)            -> error({error, Error}).
 
 %%%_* Helpers ----------------------------------------------------------
-kf(Key, List) ->
-  {Key, Value} = lists:keyfind(Key, 1, List),
-  Value.
+kf(Key, List) -> kf(Key, List, undefined).
+
+kf(Key, List, Default) ->
+  case lists:keyfind(Key, 1, List) of
+    {Key, Value} -> Value;
+    false        -> Default
+  end.
 
 b(B) when is_binary(B) -> unicode:characters_to_list(B);
 b(S) when is_list(S)   -> unicode:characters_to_binary(S).
