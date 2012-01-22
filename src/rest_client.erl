@@ -58,8 +58,17 @@ send_request(Method, Request) ->
 parse_response({ok, {{"HTTP/1.1", 200, "OK"}, Headers, Body}}) ->
   case kf("content-type", Headers) of
     "application/xml" ->
-      {ok, Payload} = erlsom:simple_form(Body),
+      {ok, _Payload} = erlsom:simple_form(Body);
+    "application/json" ->
+      Payload = mochijson2:decode(Body, [{format, proplist}]),
       {ok, Payload};
+    _ ->
+      error("Unsupported content-type")
+  end;
+parse_response({ok, {{"HTTP/1.1", 201, "Created"}, Headers, Body}}) ->
+  case kf("content-type", Headers) of
+    "application/xml" ->
+      {ok, _Payload} = erlsom:simple_form(Body);
     "application/json" ->
       Payload = mochijson2:decode(Body, [{format, proplist}]),
       {ok, Payload};
