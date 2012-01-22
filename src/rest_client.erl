@@ -42,12 +42,16 @@ request(Method, Path) ->
                  kvlist() | {error, _}.
 
 request(Method, Path, Data) ->
-  Payload  = percent:url_encode(Data),
+  Payload = create_query(Data),
   Request  = {Path, [], "application/x-www-form-urlencoded", Payload},
   Response = send_request(Method, Request),
   parse_response(Response).
 
 %%%_* Internals --------------------------------------------------------
+create_query(Data) ->
+  Fun = fun({K,V}) -> percent:url_encode(K)++"="++ percent:url_encode(V) end,
+  string:join(lists:map(Fun, Data), "&").
+
 send_request(Method, Request) ->
   httpc:request(Method, Request, [{timeout, ?SERVER_TIMEOUT}], []).
  
